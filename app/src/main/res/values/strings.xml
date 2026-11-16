@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CamOverlay</string>
+    <string name="module_description">Adjust zoom, exposure, focus and white balance of the camera another app is using.</string>
+</resources>

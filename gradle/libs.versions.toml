@@ -1,0 +1,25 @@
+[versions]
+agp = "8.13.0"
+kotlin = "2.2.21"
+compileSdk = "36"
+targetSdk = "36"
+minSdk = "30"
+libxposed = "102.0.0"
+coreKtx = "1.17.0"
+activityCompose = "1.11.0"
+composeBom = "2025.10.01"
+
+[libraries]
+libxposed-api = { module = "io.github.libxposed:api", version.ref = "libxposed" }
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtx" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidx-compose-ui = { module = "androidx.compose.ui:ui" }
+androidx-compose-material3 = { module = "androidx.compose.material3:material3" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
