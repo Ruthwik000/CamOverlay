@@ -48,6 +48,7 @@ class CameraLabActivity : Activity() {
     private lateinit var textureView: TextureView
     private lateinit var hud: TextView
     private lateinit var info: TextView
+    private lateinit var zoomBubble: ZoomBubble
 
     private var cameraThread: HandlerThread? = null
     private var cameraHandler: Handler? = null
@@ -123,6 +124,9 @@ class CameraLabActivity : Activity() {
         val cap = CapabilityReader.read(id, chars)
         capability = cap
         info.text = describe(cap)
+        // Keep our zoom inside this camera's range (the rear camera usually allows more than the front).
+        appZoom = appZoom.coerceIn(cap.zoomMin, cap.zoomMax.coerceAtLeast(cap.zoomMin))
+        zoomBubble.setCapability(cap, appZoom)
         Log.i(TAG, "capabilities: $cap")
 
         val sizes = chars.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
@@ -238,6 +242,7 @@ class CameraLabActivity : Activity() {
         session = null
         device = null
         builder = null
+        zoomBubble.hide()
     }
 
     // -------------------------------------------------------------------- ui
@@ -279,6 +284,7 @@ class CameraLabActivity : Activity() {
             text = "App zoom 1x/2x"
             setOnClickListener {
                 appZoom = if (appZoom < 1.5f) 2.0f else 1.0f
+                capability?.let { zoomBubble.setCapability(it, appZoom) }
                 submit()
             }
         })
@@ -304,6 +310,13 @@ class CameraLabActivity : Activity() {
             setOnCheckedChangeListener { _, checked -> rebuildEvery30 = checked }
         })
         root.addView(bottom, FrameLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT, Gravity.BOTTOM))
+
+        // Floating zoom control, added last so it sits above everything else. It changes this
+        // app's own zoom, exactly like the stock camera app's zoom slider would.
+        zoomBubble = ZoomBubble(this, root) { zoom ->
+            appZoom = zoom
+            submit()
+        }
         return root
     }
 
